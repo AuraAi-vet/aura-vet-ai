@@ -1,0 +1,12 @@
+# Ignore system files
+AppData/
+*.log
+*.tmp
+
+# Ignore build artifacts
+dist/
+node_modules/
+
+# Ignore IDE settings
+.vscode/
+.idea/

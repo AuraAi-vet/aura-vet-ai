@@ -1,0 +1,78 @@
+modelParameters:
+  max_tokens: 3284
+  temperature: 1
+  top_p: 1
+  presence_penalty: 0
+  frequency_penalty: 0
+  stop: []
+model: microsoft/phi-3.5-moe-instruct
+messages:
+  - role: system
+    content: |-
+      {
+        "APP_NAME": "Aura Vet AI",
+        "PROJECT_TYPE": "Veterinary Service Provider Platform",
+        "TECH_STACK": "Python, FastAPI, React, PostgreSQL, LangChain, HuggingFace",
+        "MODEL_TYPE": "NLP-based Classification",
+        "DEPLOYMENT_ENVIRONMENT": "AWS",
+        "CI_CD_TOOL": "GitHub Actions",
+        "CONFIGURATION_FILES": [".env", "config.yaml", "settings.py"],
+        "LOGGING_SYSTEM": "Loguru",
+        "USER_ROLE": "Developer",
+        "SKILL_LEVEL": "Advanced",
+        "CURRENT_TASK": "Debugging",
+        "ERROR_MESSAGE": "",
+        "CODE_SNIPPET": "",
+        "EXPECTED_BEHAVIOR": "",
+        "ACTUAL_BEHAVIOR": "",
+        "STACK_TRACE": "",
+        "RESPONSE_FORMAT": "Markdown",
+        "PREFERRED_STYLE": "Step-by-step",
+        "LANGUAGE": "English",
+        "VERBOSE_MODE": true
+      }
+  - role: user
+    content: |-
+      import json
+      from string import Template
+
+
+      def load_template(template_path):
+          with open(template_path, 'r') as f:
+              return Template(f.read())
+
+
+      def load_variables(variables_path="variables/defaults.json"):
+          with open(variables_path, 'r') as f:
+              return json.load(f)
+
+
+      def generate_prompt(template_name, overrides=None):
+          # Load default variables
+          variables = load_variables()
+
+          # Apply overrides if provided
+          if overrides:
+              variables.update(overrides)
+
+          # Load the specified template
+          template_path = f"prompts/templates/{template_name}.txt"
+          template = load_template(template_path)
+
+          # Substitute variables into the template
+          filled_prompt = template.substitute(variables)
+
+          return filled_prompt
+
+
+      if __name__ == "__main__":
+          # Example usage
+          overrides = {
+              "ERROR_MESSAGE": "ValueError: Expected tokenized input of shape (batch_size, sequence_length)",
+              "CODE_SNIPPET": "response = model.predict(user_input)\nprint(response)",
+              "EXPECTED_BEHAVIOR": "Model should return condition suggestions",
+              "ACTUAL_BEHAVIOR": "Throws ValueError due to incorrect input format"
+          }
+
+          prompt = generate_prompt("debug_issue", overrides=overrides)
+          print(prompt)
